@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+option go_package = "MODULE_NAME/api";
+
+
+service MODULE_NAME {
+}

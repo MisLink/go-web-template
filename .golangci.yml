@@ -1,0 +1,26 @@
+run:
+  timeout: 5m
+  modules-download-mode: readonly
+
+linters:
+  enable:
+    - bodyclose
+    - dupl
+    - gofumpt
+    - gocognit
+    - goconst
+    - nakedret
+    - noctx
+    - prealloc
+    - gosec
+    - tparallel
+    - unparam
+
+linters-settings:
+  gofumpt:
+    module-path: MODULE_NAME
+
+issues:
+  exclude-use-default: false
+  max-issues-per-linter: 0
+  max-same-issues: 0

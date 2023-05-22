@@ -1,0 +1,41 @@
+ignoreGeneratedHeader = false
+severity = "warning"
+confidence = 0.8
+errorCode = 1
+warningCode = 2
+
+enableAllRules = true
+
+exclude = ["api/generate.go", "pkg/database/ent/generate.go"]
+
+[rule.blank-imports]
+Disabled = true
+[rule.file-header]
+Disabled = true
+[rule.argument-limit]
+Disabled = true
+[rule.max-public-structs]
+Disabled = true
+[rule.function-length]
+Disabled = true
+[rule.banned-characters]
+Disabled = true
+[rule.function-result-limit]
+Disabled = true
+[rule.exported]
+Disabled = true
+[rule.add-constant]
+Disabled = true
+[rule.empty-lines]
+Disabled = true
+[rule.package-comments]
+Disabled = true
+
+[rule.cyclomatic]
+Arguments = [15]
+[rule.cognitive-complexity]
+Arguments = [15]
+[rule.line-length-limit]
+Arguments = [120]
+[rule.unhandled-error]
+arguments = ["fmt.Printf", "fmt.Println"]

@@ -4,22 +4,21 @@ import (
 	"context"
 	"net"
 	"net/http"
+	"os/signal"
 	"time"
 
 	"MODULE_NAME/pkg/utils"
-	"MODULE_NAME/types"
-
-	_ "MODULE_NAME/pkg/metrics"
 
 	"code.cloudfoundry.org/bytefmt"
 	sentryhttp "github.com/getsentry/sentry-go/http"
-	"github.com/go-chi/chi/v5"
+	chi "github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/google/wire"
-	"github.com/knadh/koanf"
+	"github.com/knadh/koanf/v2"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/hlog"
+	"golang.org/x/sync/errgroup"
 )
 
 type Options struct {
@@ -41,11 +40,11 @@ type Server struct {
 	logger zerolog.Logger
 }
 
-type Mounter interface {
+type Mount interface {
 	Mount(string, http.Handler)
 }
 
-type MountFunc func(Mounter)
+type MountFunc func(Mount)
 
 func New(
 	opt *Options,
@@ -99,24 +98,28 @@ func New(
 }
 
 func (s *Server) Start() error {
+	ctx, stop := signal.NotifyContext(
+		context.Background(),
+		utils.GracefulShutdownSignals...)
+	defer stop()
+	eg, ctx := errgroup.WithContext(ctx)
 	ln, err := net.Listen("tcp", s.server.Addr)
 	if err != nil {
 		return err
 	}
-	s.logger.Info().
-		Str("addr", s.server.Addr).
-		Str("version", types.Version).
-		Str("built_at", types.BuiltAt).
-		Msg("start listening")
-	return utils.GracefulStop(
-		context.Background(),
-		func(ctx context.Context) error { return s.server.Serve(ln) },
-		func() error {
-			ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
-			defer cancel()
-			return s.server.Shutdown(ctx)
-		},
-	)
+	s.logger.Info().Str("addr", s.server.Addr).Msg("start listening")
+	eg.Go(func() error { return s.server.Serve(ln) })
+	eg.Go(func() error {
+		<-ctx.Done()
+		return s.Stop()
+	})
+	return eg.Wait()
+}
+
+func (s *Server) Stop() error {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
+	defer cancel()
+	return s.server.Shutdown(ctx)
 }
 
 var ProviderSet = wire.NewSet(NewOptions, New)

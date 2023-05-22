@@ -63,7 +63,12 @@ func CreateCrontab() (*crontab.Crontab, func(), error) {
 		cleanup()
 		return nil, nil, err
 	}
-	locker, err := redis.NewLock(redisOptions)
+	clientOption, err := redis.NewRedisOption(redisOptions)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	locker, err := redis.NewLock(clientOption, redisOptions)
 	if err != nil {
 		cleanup()
 		return nil, nil, err

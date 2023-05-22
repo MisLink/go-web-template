@@ -12,7 +12,10 @@ build-race:
 	$(build) -race -o ./tmp/main .
 
 dev:
-	air $(SERVICE) -d
+	air $(SERVICE)
 
 test:
 	go test ./...
+
+release:
+	$(build) -trimpath -o MODULE_NAME .

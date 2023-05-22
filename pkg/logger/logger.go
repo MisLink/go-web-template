@@ -8,7 +8,7 @@ import (
 	stdlog "log"
 
 	"github.com/google/wire"
-	"github.com/knadh/koanf"
+	"github.com/knadh/koanf/v2"
 	"github.com/mattn/go-isatty"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -17,7 +17,7 @@ import (
 
 type Options struct {
 	Level string
-	Json  bool
+	Json  bool //revive:disable-line
 }
 
 func NewOptions(k *koanf.Koanf) (*Options, error) {

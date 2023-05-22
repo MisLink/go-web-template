@@ -7,13 +7,13 @@ import (
 
 	"code.cloudfoundry.org/bytefmt"
 	"github.com/google/wire"
-	"github.com/knadh/koanf"
-	"github.com/rueian/rueidis"
-	"github.com/rueian/rueidis/rueidislock"
+	"github.com/knadh/koanf/v2"
+	"github.com/redis/rueidis"
+	"github.com/redis/rueidis/rueidislock"
 )
 
 type Options struct {
-	Url        string
+	Url        string //revive:disable-line
 	LockPrefix string
 }
 
@@ -48,11 +48,7 @@ func NewRedisOption(opt *Options) (rueidis.ClientOption, error) {
 	}, nil
 }
 
-func New(o *Options) (rueidis.Client, error) {
-	opt, err := NewRedisOption(o)
-	if err != nil {
-		return nil, err
-	}
+func New(opt rueidis.ClientOption) (rueidis.Client, error) {
 	c, err := rueidis.NewClient(opt)
 	if err != nil {
 		return nil, err
@@ -60,15 +56,11 @@ func New(o *Options) (rueidis.Client, error) {
 	return c, nil
 }
 
-func NewLock(o *Options) (rueidislock.Locker, error) {
-	opt, err := NewRedisOption(o)
-	if err != nil {
-		return nil, err
-	}
+func NewLock(opt rueidis.ClientOption, o *Options) (rueidislock.Locker, error) {
 	return rueidislock.NewLocker(rueidislock.LockerOption{
 		ClientOption: opt,
 		KeyPrefix:    o.LockPrefix,
 	})
 }
 
-var ProviderSet = wire.NewSet(New, NewOptions, NewLock)
+var ProviderSet = wire.NewSet(New, NewRedisOption, NewOptions, NewLock)

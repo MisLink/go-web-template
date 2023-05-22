@@ -13,8 +13,8 @@ import (
 	"github.com/google/wire"
 	"github.com/joho/godotenv"
 	_ "github.com/joho/godotenv/autoload"
-	"github.com/knadh/koanf"
 	"github.com/knadh/koanf/providers/env"
+	"github.com/knadh/koanf/v2"
 )
 
 func New() (*koanf.Koanf, func(), error) {
@@ -34,6 +34,7 @@ func New() (*koanf.Koanf, func(), error) {
 		SampleRate:     0.1,
 		SendDefaultPII: true,
 		Release:        types.Version,
+		EnableTracing:  true,
 	}); err != nil {
 		return nil, nil, err
 	}

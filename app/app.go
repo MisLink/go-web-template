@@ -15,9 +15,10 @@ import (
 type Server struct{}
 
 func NewServer() api.TwirpServer {
-	server := &Server{}
+	s := &Server{}
 	handler := api.NewMODULE_NAMEServer(
-		server,
+		s,
+		twirp.WithServerPathPrefix(""),
 		twirp.WithServerHooks(&twirp.ServerHooks{
 			Error: func(ctx context.Context, err twirp.Error) context.Context {
 				if hub := sentry.GetHubFromContext(ctx); hub != nil {
@@ -30,7 +31,7 @@ func NewServer() api.TwirpServer {
 }
 
 func NewHandler() server.MountFunc {
-	return func(m server.Mounter) {
+	return func(m server.Mount) {
 		m.Mount("/", NewServer())
 	}
 }

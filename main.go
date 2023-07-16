@@ -1,10 +1,9 @@
 package main
 
 import (
-	"log"
-
 	"MODULE_NAME/cmd"
 
+	"github.com/rs/zerolog/log"
 	"go.uber.org/automaxprocs/maxprocs"
 )
 
@@ -14,6 +13,6 @@ func init() {
 
 func main() {
 	if err := cmd.Execute(); err != nil {
-		log.Fatal(err)
+		log.Fatal().Err(err).Send()
 	}
 }

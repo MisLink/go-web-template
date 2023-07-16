@@ -22,25 +22,26 @@ import (
 // Injectors from wire.go:
 
 func CreateServer() (*server.Server, func(), error) {
-	koanf, cleanup, err := config.New()
+	koanf, err := config.New()
 	if err != nil {
 		return nil, nil, err
 	}
 	options, err := server.NewOptions(koanf)
 	if err != nil {
-		cleanup()
 		return nil, nil, err
 	}
 	mountFunc := app.NewHandler()
 	loggerOptions, err := logger.NewOptions(koanf)
 	if err != nil {
-		cleanup()
 		return nil, nil, err
 	}
 	zerologLogger := logger.New(loggerOptions)
-	resource, err := telemetry.NewResource()
+	configConfig, err := config.NewConfig(koanf)
 	if err != nil {
-		cleanup()
+		return nil, nil, err
+	}
+	resource, cleanup, err := telemetry.NewResource(configConfig)
+	if err != nil {
 		return nil, nil, err
 	}
 	spanExporter, err := telemetry.NewTraceExporter()
@@ -80,57 +81,53 @@ func CreateServer() (*server.Server, func(), error) {
 }
 
 func CreateCrontab() (*crontab.Crontab, func(), error) {
-	koanf, cleanup, err := config.New()
+	koanf, err := config.New()
 	if err != nil {
 		return nil, nil, err
 	}
 	options, err := logger.NewOptions(koanf)
 	if err != nil {
-		cleanup()
 		return nil, nil, err
 	}
 	zerologLogger := logger.New(options)
 	redisOptions, err := redis.NewOptions(koanf)
 	if err != nil {
-		cleanup()
 		return nil, nil, err
 	}
 	clientOption, err := redis.NewRedisOption(redisOptions)
 	if err != nil {
-		cleanup()
 		return nil, nil, err
 	}
 	locker, err := redis.NewLock(clientOption, redisOptions)
 	if err != nil {
-		cleanup()
 		return nil, nil, err
 	}
 	registerFunc := app.NewCrontab()
 	crontabCrontab := crontab.New(zerologLogger, locker, registerFunc)
 	return crontabCrontab, func() {
-		cleanup()
 	}, nil
 }
 
 func CreateDatabase() (*ent.Client, func(), error) {
-	koanf, cleanup, err := config.New()
+	koanf, err := config.New()
 	if err != nil {
 		return nil, nil, err
 	}
 	options, err := database.NewOptions(koanf)
 	if err != nil {
-		cleanup()
 		return nil, nil, err
 	}
 	loggerOptions, err := logger.NewOptions(koanf)
 	if err != nil {
-		cleanup()
 		return nil, nil, err
 	}
 	zerologLogger := logger.New(loggerOptions)
-	resource, err := telemetry.NewResource()
+	configConfig, err := config.NewConfig(koanf)
 	if err != nil {
-		cleanup()
+		return nil, nil, err
+	}
+	resource, cleanup, err := telemetry.NewResource(configConfig)
+	if err != nil {
 		return nil, nil, err
 	}
 	spanExporter, err := telemetry.NewTraceExporter()

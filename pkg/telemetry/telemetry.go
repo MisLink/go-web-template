@@ -2,10 +2,14 @@ package telemetry
 
 import (
 	"context"
+	"time"
 
+	"MODULE_NAME/pkg/config"
 	"MODULE_NAME/types"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/google/wire"
+	"github.com/rs/zerolog/log"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/prometheus"
 	"go.opentelemetry.io/otel/exporters/stdout/stdouttrace"
@@ -17,16 +21,31 @@ import (
 	"go.opentelemetry.io/otel/trace"
 )
 
-func NewResource() (*resource.Resource, error) {
-	return resource.Merge(
+func NewResource(c *config.Config) (*resource.Resource, func(), error) {
+	if err := sentry.Init(sentry.ClientOptions{
+		Dsn:              c.DSN,
+		Environment:      c.ENV,
+		SampleRate:       0.1,
+		SendDefaultPII:   true,
+		Release:          types.Version,
+		EnableTracing:    true,
+		TracesSampleRate: 0.1,
+	}); err != nil {
+		return nil, nil, err
+	}
+	r, err := resource.Merge(
 		resource.Default(),
 		resource.NewWithAttributes(
 			semconv.SchemaURL,
 			semconv.ServiceName(types.ModuleName),
 			semconv.ServiceVersion(types.Version),
-			semconv.DeploymentEnvironment(""),
+			semconv.DeploymentEnvironment(c.ENV),
 		),
 	)
+	if err != nil {
+		return nil, nil, err
+	}
+	return r, func() { sentry.Flush(time.Second * 5) }, nil
 }
 
 func NewTraceExporter() (sdktrace.SpanExporter, error) {
@@ -39,7 +58,13 @@ func NewTraceProvider(r *resource.Resource, exp sdktrace.SpanExporter) (trace.Tr
 		sdktrace.WithResource(r),
 	)
 	otel.SetTracerProvider(tp)
-	return tp, func() { _ = tp.Shutdown(context.Background()) }, nil
+	return tp, func() {
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
+		defer cancel()
+		if err := tp.Shutdown(ctx); err != nil {
+			log.Error().Err(err).Msg("failed to shutdown trace provider")
+		}
+	}, nil
 }
 
 func NewTracer(tp trace.TracerProvider) trace.Tracer {
@@ -56,7 +81,13 @@ func NewMeterProvider(r *resource.Resource, reader sdkmetric.Reader) (metric.Met
 		sdkmetric.WithReader(reader),
 	)
 	otel.SetMeterProvider(mp)
-	return mp, func() { _ = mp.Shutdown(context.Background()) }, nil
+	return mp, func() {
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
+		defer cancel()
+		if err := mp.Shutdown(ctx); err != nil {
+			log.Error().Err(err).Msg("failed to shutdown meter provider")
+		}
+	}, nil
 }
 
 func NewMeter(mp metric.MeterProvider) metric.Meter {

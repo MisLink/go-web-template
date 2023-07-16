@@ -6,4 +6,4 @@
 // Package internal holds a loadable version of the latest schema.
 package internal
 
-const Schema = `{"Schema":"MODULE_NAME/pkg/database/ent/schema","Package":"MODULE_NAME/pkg/database/ent","Schemas":[{"name":"User","config":{"Table":""}}],"Features":["sql/lock","privacy","schema/snapshot","entql","sql/modifier","sql/execquery"]}`
+const Schema = `{"Schema":"MODULE_NAME/pkg/database/ent/schema","Package":"MODULE_NAME/pkg/database/ent","Schemas":[{"name":"User","config":{"Table":""}}],"Features":["sql/lock","sql/modifier","sql/execquery","sql/upsert","schema/snapshot","privacy","entql"]}`

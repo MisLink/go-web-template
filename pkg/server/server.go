@@ -55,7 +55,6 @@ func New(
 	tp trace.TracerProvider,
 	mp metric.MeterProvider,
 ) (*Server, error) {
-	logger = logger.With().Str("logger", "server").Logger()
 	router := chi.NewRouter()
 	router.Use(
 		middleware.RealIP,
@@ -101,7 +100,7 @@ func New(
 			WriteTimeout:      60 * time.Second,
 			MaxHeaderBytes:    1 * bytefmt.MEGABYTE,
 		},
-		logger: logger,
+		logger: logger.With().Str("logger", "server").Logger(),
 	}
 	return server, nil
 }

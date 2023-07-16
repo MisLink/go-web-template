@@ -2,7 +2,6 @@ package crontab
 
 import (
 	"context"
-	"os/signal"
 	"time"
 
 	"MODULE_NAME/pkg/utils"
@@ -11,7 +10,6 @@ import (
 	"github.com/redis/rueidis/rueidislock"
 	"github.com/robfig/cron/v3"
 	"github.com/rs/zerolog"
-	"golang.org/x/sync/errgroup"
 )
 
 type PeriodicTask func() (string, func() error)
@@ -71,30 +69,26 @@ func (c *Crontab) Register(name string, task PeriodicTask) error {
 }
 
 func (c *Crontab) Start() error {
-	ctx := context.Background()
+	var ctx context.Context
+	var cancel context.CancelFunc
 	for {
-		ctx, cancel, err := c.locker.WithContext(ctx, "crontab")
+		var err error
+		ctx, cancel, err = c.locker.WithContext(context.Background(), "crontab")
 		if err != nil {
 			c.logger.Err(err).Msg("obtain lock error")
 			continue
 		}
-		ctx, stop := signal.NotifyContext(ctx, utils.GracefulShutdownSignals...)
-		eg, ctx := errgroup.WithContext(ctx)
-		eg.Go(func() error {
-			c.cron.Run()
-			return nil
-		})
-		eg.Go(func() error {
-			<-ctx.Done()
-			ctx := c.cron.Stop()
-			<-ctx.Done()
-			return nil
-		})
-		_ = eg.Wait()
-		stop()
-		cancel()
-		return err
+		break
 	}
+	defer cancel()
+	return utils.Lifecycle(ctx, func() error {
+		c.cron.Run()
+		return nil
+	}, func() error {
+		ctx := c.cron.Stop()
+		<-ctx.Done()
+		return nil
+	})
 }
 
 var ProviderSet = wire.NewSet(New)

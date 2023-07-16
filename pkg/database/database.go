@@ -9,20 +9,20 @@ import (
 	_ "MODULE_NAME/pkg/database/ent/runtime"
 
 	"entgo.io/ent/dialect/sql"
+	"github.com/XSAM/otelsql"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/wire"
 	"github.com/knadh/koanf/v2"
 	"github.com/rs/zerolog"
+	"go.opentelemetry.io/otel/metric"
+	semconv "go.opentelemetry.io/otel/semconv/v1.17.0"
+	"go.opentelemetry.io/otel/trace"
 )
 
-type DBConfig struct {
-	Driver string
-	Url    string // revive:disable-line
-	Debug  bool
-}
-
 type Options struct {
-	Default DBConfig
+	Driver string
+	URL    string
+	Debug  bool
 }
 
 func NewOptions(k *koanf.Koanf) (*Options, error) {
@@ -33,16 +33,21 @@ func NewOptions(k *koanf.Koanf) (*Options, error) {
 	return o, nil
 }
 
-func New(opt *Options, logger zerolog.Logger) (*ent.Client, error) {
-	drv, err := sql.Open(opt.Default.Driver, opt.Default.Url)
+func New(opt *Options, logger zerolog.Logger, tp trace.TracerProvider, mp metric.MeterProvider) (*ent.Client, error) {
+	db, err := otelsql.Open(opt.Driver, opt.URL,
+		otelsql.WithAttributes(semconv.DBSystemMySQL), otelsql.WithTracerProvider(tp), otelsql.WithMeterProvider(mp))
 	if err != nil {
 		return nil, err
 	}
+	if err := otelsql.RegisterDBStatsMetrics(db, otelsql.WithAttributes(semconv.DBSystemMySQL)); err != nil {
+		return nil, err
+	}
+	drv := sql.OpenDB(opt.Driver, db)
 	logger = logger.With().Str("logger", "database").Logger()
 	opts := []ent.Option{ent.Driver(drv), ent.Log(func(a ...any) {
 		logger.Print(a...)
 	})}
-	if opt.Default.Debug {
+	if opt.Debug {
 		opts = append(opts, ent.Debug())
 	}
 	client := ent.NewClient(opts...)
@@ -62,7 +67,7 @@ func WithTx(ctx context.Context, client *ent.Client, fn func(tx *ent.Tx) error) 
 	}()
 	if err := fn(tx); err != nil {
 		if rerr := tx.Rollback(); rerr != nil {
-			err = fmt.Errorf("%w: rolling back transaction: %v", err, rerr)
+			err = fmt.Errorf("%w: rolling back transaction: %w", err, rerr)
 		}
 		return err
 	}

@@ -1,8 +1,7 @@
 package main
 
 import (
-	"math/rand"
-	"time"
+	"log"
 
 	"MODULE_NAME/cmd"
 
@@ -11,9 +10,10 @@ import (
 
 func init() {
 	_, _ = maxprocs.Set(maxprocs.Logger(func(s string, i ...any) {}))
-	rand.Seed(time.Now().UnixNano())
 }
 
 func main() {
-	cmd.Execute()
+	if err := cmd.Execute(); err != nil {
+		log.Fatal(err)
+	}
 }

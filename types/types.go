@@ -1,6 +1,7 @@
 package types
 
 var (
-	Version string
-	BuiltAt string
+	Version    string
+	BuiltAt    string
+	ModuleName = "MODULE_NAME"
 )

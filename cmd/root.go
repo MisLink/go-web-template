@@ -9,7 +9,7 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:     "MODULE_NAME",
+	Use:     types.ModuleName,
 	Version: fmt.Sprintf("%s built at: %s", types.Version, types.BuiltAt),
 	CompletionOptions: cobra.CompletionOptions{
 		DisableDefaultCmd: true,
@@ -20,6 +20,6 @@ var rootCmd = &cobra.Command{
 
 func init() {}
 
-func Execute() {
-	_ = rootCmd.Execute()
+func Execute() error {
+	return rootCmd.Execute()
 }

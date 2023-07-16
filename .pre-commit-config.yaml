@@ -13,11 +13,6 @@ repos:
         pass_filenames: false
         entry: go generate -x ./...
         types: [go]
-      - id: revive
-        name: revive
-        language: system
-        pass_filenames: false
-        entry: revive -config revive.toml ./...
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
     hooks:
@@ -25,12 +20,7 @@ repos:
       - id: check-yaml
       - id: end-of-file-fixer
       - id: trailing-whitespace
-  # - repo: https://github.com/golangci/golangci-lint
-  #   rev: v1.50.1
-  #   hooks:
-  #     - id: golangci-lint
-  - repo: https://github.com/segmentio/golines
-    rev: v0.11.0
+  - repo: https://github.com/golangci/golangci-lint
+    rev: v1.53.3
     hooks:
-      - id: golines
-        args: ["-m", "120"]
+      - id: golangci-lint

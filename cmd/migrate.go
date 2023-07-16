@@ -25,9 +25,8 @@ var migrateCmd = &cobra.Command{
 		}
 		if dryRun {
 			return client.Schema.WriteTo(context.Background(), os.Stdout, opts...)
-		} else { //revive:disable-line:indent-error-flow
-			return client.Schema.Create(context.Background(), opts...)
 		}
+		return client.Schema.Create(context.Background(), opts...)
 	},
 }
 

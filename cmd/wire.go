@@ -11,12 +11,14 @@ import (
 	"MODULE_NAME/pkg/logger"
 	"MODULE_NAME/pkg/redis"
 	"MODULE_NAME/pkg/server"
+	"MODULE_NAME/pkg/telemetry"
 
 	"github.com/google/wire"
 )
 
 var providerSet = wire.NewSet(
 	config.ProviderSet,
+	telemetry.ProviderSet,
 	logger.ProviderSet,
 	server.ProviderSet,
 	app.ProviderSet,

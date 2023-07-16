@@ -10,10 +10,13 @@ import (
 	"github.com/knadh/koanf/v2"
 	"github.com/redis/rueidis"
 	"github.com/redis/rueidis/rueidislock"
+	"github.com/redis/rueidis/rueidisotel"
+	"go.opentelemetry.io/otel/metric"
+	"go.opentelemetry.io/otel/trace"
 )
 
 type Options struct {
-	Url        string //revive:disable-line
+	URL        string
 	LockPrefix string
 }
 
@@ -26,7 +29,7 @@ func NewOptions(k *koanf.Koanf) (*Options, error) {
 }
 
 func NewRedisOption(opt *Options) (rueidis.ClientOption, error) {
-	u, err := url.Parse(opt.Url)
+	u, err := url.Parse(opt.URL)
 	if err != nil {
 		return rueidis.ClientOption{}, err
 	}
@@ -48,11 +51,12 @@ func NewRedisOption(opt *Options) (rueidis.ClientOption, error) {
 	}, nil
 }
 
-func New(opt rueidis.ClientOption) (rueidis.Client, error) {
+func New(opt rueidis.ClientOption, tp trace.TracerProvider, mp metric.MeterProvider) (rueidis.Client, error) {
 	c, err := rueidis.NewClient(opt)
 	if err != nil {
 		return nil, err
 	}
+	c = rueidisotel.WithClient(c, rueidisotel.WithTracerProvider(tp), rueidisotel.WithMeterProvider(mp))
 	return c, nil
 }
 

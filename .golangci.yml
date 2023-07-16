@@ -3,24 +3,80 @@ run:
   modules-download-mode: readonly
 
 linters:
+  disable-all: true
   enable:
     - bodyclose
-    - dupl
-    - gofumpt
-    - gocognit
+    # - depguard
+    - dogsled
+    - errcheck
     - goconst
-    - nakedret
-    - noctx
-    - prealloc
+    - goimports
+    - goprintffuncname
     - gosec
-    - tparallel
-    - unparam
+    - gosimple
+    - govet
+    - ineffassign
+    - misspell
+    - nakedret
+    - exportloopref
+    - staticcheck
+    - stylecheck
+    - typecheck
+    - unconvert
+    - unused
+    - whitespace
+    - gocyclo
+    - exhaustive
+    - typecheck
+    - asciicheck
+    - errorlint
+    - revive
 
 linters-settings:
   gofumpt:
-    module-path: MODULE_NAME
+    module-path: sec-blame
+  stylecheck:
+    checks: ["all", "-ST1000", "-ST1003"]
+  revive:
+    ignore-generated-header: true
+    enable-all-rules: true
+    rules:
+      - name: blank-imports
+        disabled: true
+      - name: file-header
+        disabled: true
+      - name: argument-limit
+        disabled: true
+      - name: max-public-structs
+        disabled: true
+      - name: function-length
+        disabled: true
+      - name: banned-characters
+        disabled: true
+      - name: function-result-limit
+        disabled: true
+      - name: exported
+        disabled: true
+      - name: add-constant
+        disabled: true
+      - name: empty-lines
+        disabled: true
+      - name: package-comments
+        disabled: true
+      - name: cyclomatic
+        arguments: [15]
+      - name: cognitive-complexity
+        arguments: [15]
+      - name: line-length-limit
+        arguments: [120]
+      - name: unhandled-error
+        arguments: ["fmt.Printf", "fmt.Println"]
 
 issues:
   exclude-use-default: false
+  exclude-rules:
+    - path: generate\.go
+      linters:
+        - revive
   max-issues-per-linter: 0
   max-same-issues: 0

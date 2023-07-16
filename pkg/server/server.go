@@ -4,10 +4,10 @@ import (
 	"context"
 	"net"
 	"net/http"
-	"os/signal"
 	"time"
 
 	"MODULE_NAME/pkg/utils"
+	"MODULE_NAME/types"
 
 	"code.cloudfoundry.org/bytefmt"
 	sentryhttp "github.com/getsentry/sentry-go/http"
@@ -18,7 +18,9 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/hlog"
-	"golang.org/x/sync/errgroup"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
+	"go.opentelemetry.io/otel/metric"
+	"go.opentelemetry.io/otel/trace"
 )
 
 type Options struct {
@@ -36,8 +38,8 @@ func NewOptions(k *koanf.Koanf) (*Options, error) {
 }
 
 type Server struct {
-	server http.Server
 	logger zerolog.Logger
+	server http.Server
 }
 
 type Mount interface {
@@ -50,13 +52,16 @@ func New(
 	opt *Options,
 	mount MountFunc,
 	logger zerolog.Logger,
+	tp trace.TracerProvider,
+	mp metric.MeterProvider,
 ) (*Server, error) {
 	logger = logger.With().Str("logger", "server").Logger()
 	router := chi.NewRouter()
 	router.Use(
-		sentryhttp.New(sentryhttp.Options{Repanic: true}).Handle,
-		hlog.NewHandler(logger),
 		middleware.RealIP,
+		middleware.CleanPath,
+		hlog.NewHandler(logger),
+		sentryhttp.New(sentryhttp.Options{Repanic: true}).Handle,
 		hlog.RequestIDHandler("request_id", "X-Request-Id"),
 		hlog.AccessHandler(func(r *http.Request, status, size int, duration time.Duration) {
 			hlog.FromRequest(r).Info().
@@ -69,24 +74,28 @@ func New(
 				Str("user_agent", r.Header.Get("User-Agent")).
 				Str("referer", r.Header.Get("Referer")).
 				Str("proto", r.Proto).
-				Msg("")
+				Send()
 		}),
-		middleware.CleanPath,
 		middleware.Heartbeat("/ping"),
 		middleware.Recoverer,
 	)
 	router.Group(func(r chi.Router) {
 		r.Use(
-			middleware.BasicAuth("MODULE_NAME-debug", map[string]string{"MODULE_NAME": ""}),
+			middleware.BasicAuth(types.ModuleName, map[string]string{types.ModuleName: ""}),
 		)
 		r.Mount("/debug", middleware.Profiler())
 	})
 	router.Mount("/metrics", promhttp.Handler())
 	mount(router)
+	handler := otelhttp.NewHandler(router, types.ModuleName,
+		otelhttp.WithTracerProvider(tp),
+		otelhttp.WithMeterProvider(mp),
+		otelhttp.WithMessageEvents(otelhttp.ReadEvents, otelhttp.WriteEvents),
+	)
 	server := &Server{
 		server: http.Server{
 			Addr:              opt.Addr,
-			Handler:           router,
+			Handler:           handler,
 			ReadTimeout:       60 * time.Second,
 			ReadHeaderTimeout: 30 * time.Second,
 			WriteTimeout:      60 * time.Second,
@@ -98,28 +107,21 @@ func New(
 }
 
 func (s *Server) Start() error {
-	ctx, stop := signal.NotifyContext(
+	return utils.Lifecycle(
 		context.Background(),
-		utils.GracefulShutdownSignals...)
-	defer stop()
-	eg, ctx := errgroup.WithContext(ctx)
-	ln, err := net.Listen("tcp", s.server.Addr)
-	if err != nil {
-		return err
-	}
-	s.logger.Info().Str("addr", s.server.Addr).Msg("start listening")
-	eg.Go(func() error { return s.server.Serve(ln) })
-	eg.Go(func() error {
-		<-ctx.Done()
-		return s.Stop()
-	})
-	return eg.Wait()
-}
-
-func (s *Server) Stop() error {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
-	defer cancel()
-	return s.server.Shutdown(ctx)
+		func() error {
+			ln, err := net.Listen("tcp", s.server.Addr)
+			if err != nil {
+				return err
+			}
+			s.logger.Info().Str("addr", s.server.Addr).Msg("start listening")
+			return s.server.Serve(ln)
+		},
+		func() error {
+			ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
+			defer cancel()
+			return s.server.Shutdown(ctx)
+		})
 }
 
 var ProviderSet = wire.NewSet(NewOptions, New)

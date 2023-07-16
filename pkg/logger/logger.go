@@ -17,7 +17,7 @@ import (
 
 type Options struct {
 	Level string
-	Json  bool //revive:disable-line
+	JSON  bool
 }
 
 func NewOptions(k *koanf.Koanf) (*Options, error) {
@@ -41,7 +41,7 @@ func New(opt *Options) zerolog.Logger {
 	zerolog.SetGlobalLevel(level)
 	out := os.Stderr
 	var writer io.Writer = os.Stderr
-	if !opt.Json {
+	if !opt.JSON {
 		writer = zerolog.NewConsoleWriter(
 			func(w *zerolog.ConsoleWriter) { w.Out = out },
 			func(w *zerolog.ConsoleWriter) {

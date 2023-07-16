@@ -15,6 +15,7 @@ import (
 	"MODULE_NAME/pkg/logger"
 	"MODULE_NAME/pkg/redis"
 	"MODULE_NAME/pkg/server"
+	"MODULE_NAME/pkg/telemetry"
 	"github.com/google/wire"
 )
 
@@ -37,12 +38,43 @@ func CreateServer() (*server.Server, func(), error) {
 		return nil, nil, err
 	}
 	zerologLogger := logger.New(loggerOptions)
-	serverServer, err := server.New(options, mountFunc, zerologLogger)
+	resource, err := telemetry.NewResource()
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
+	spanExporter, err := telemetry.NewTraceExporter()
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	tracerProvider, cleanup2, err := telemetry.NewTraceProvider(resource, spanExporter)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	reader, err := telemetry.NewMetricReader()
+	if err != nil {
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
+	meterProvider, cleanup3, err := telemetry.NewMeterProvider(resource, reader)
+	if err != nil {
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
+	serverServer, err := server.New(options, mountFunc, zerologLogger, tracerProvider, meterProvider)
+	if err != nil {
+		cleanup3()
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
 	return serverServer, func() {
+		cleanup3()
+		cleanup2()
 		cleanup()
 	}, nil
 }
@@ -96,16 +128,47 @@ func CreateDatabase() (*ent.Client, func(), error) {
 		return nil, nil, err
 	}
 	zerologLogger := logger.New(loggerOptions)
-	client, err := database.New(options, zerologLogger)
+	resource, err := telemetry.NewResource()
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
+	spanExporter, err := telemetry.NewTraceExporter()
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	tracerProvider, cleanup2, err := telemetry.NewTraceProvider(resource, spanExporter)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	reader, err := telemetry.NewMetricReader()
+	if err != nil {
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
+	meterProvider, cleanup3, err := telemetry.NewMeterProvider(resource, reader)
+	if err != nil {
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
+	client, err := database.New(options, zerologLogger, tracerProvider, meterProvider)
+	if err != nil {
+		cleanup3()
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
 	return client, func() {
+		cleanup3()
+		cleanup2()
 		cleanup()
 	}, nil
 }
 
 // wire.go:
 
-var providerSet = wire.NewSet(config.ProviderSet, logger.ProviderSet, server.ProviderSet, app.ProviderSet, crontab.ProviderSet, redis.ProviderSet, database.ProviderSet)
+var providerSet = wire.NewSet(config.ProviderSet, telemetry.ProviderSet, logger.ProviderSet, server.ProviderSet, app.ProviderSet, crontab.ProviderSet, redis.ProviderSet, database.ProviderSet)

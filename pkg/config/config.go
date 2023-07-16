@@ -18,23 +18,24 @@ import (
 )
 
 func New() (*koanf.Koanf, func(), error) {
-	_, filename, _, _ := runtime.Caller(0)
+	_, filename, _, _ := runtime.Caller(0) // nolint:dogsled
 	dir := filepath.Join(path.Dir(filename), "..", "..")
 	_ = godotenv.Load(filepath.Join(dir, ".env"))
 	k := koanf.New(".")
 	if err := k.Load(env.Provider("APP_", ".", func(s string) string {
 		return strings.Replace(strings.ToLower(
-			strings.TrimPrefix(s, "APP_")), "_", ".", -1)
+			strings.TrimPrefix(s, "APP_")), "__", ".", -1)
 	}), nil); err != nil {
 		return nil, nil, err
 	}
 	if err := sentry.Init(sentry.ClientOptions{
-		Dsn:            k.String("dsn"),
-		Environment:    k.String("env"),
-		SampleRate:     0.1,
-		SendDefaultPII: true,
-		Release:        types.Version,
-		EnableTracing:  true,
+		Dsn:              k.String("dsn"),
+		Environment:      k.String("env"),
+		SampleRate:       0.1,
+		SendDefaultPII:   true,
+		Release:          types.Version,
+		EnableTracing:    true,
+		TracesSampleRate: 0.1,
 	}); err != nil {
 		return nil, nil, err
 	}

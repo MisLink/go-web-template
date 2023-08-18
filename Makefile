@@ -1,7 +1,7 @@
 version = $(shell git log -n 1 --format=%h)
 built_at = $(shell date +"%Y-%m-%dT%T%z")
 
-ldflags = -X MODULE_NAME/types.Version=$(version) -X MODULE_NAME/types.BuiltAt=$(built_at)
+ldflags = -X github.com/MisLink/go-web-template/types.Version=$(version) -X github.com/MisLink/go-web-template/types.BuiltAt=$(built_at)
 
 build = go build -ldflags="$(ldflags)"
 

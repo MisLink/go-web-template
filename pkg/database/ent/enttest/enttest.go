@@ -3,14 +3,14 @@
 package enttest
 
 import (
-	"MODULE_NAME/pkg/database/ent"
 	"context"
-	// required by schema hooks.
-	_ "MODULE_NAME/pkg/database/ent/runtime"
 
-	"MODULE_NAME/pkg/database/ent/migrate"
+	"github.com/MisLink/go-web-template/pkg/database/ent"
+	// required by schema hooks.
+	_ "github.com/MisLink/go-web-template/pkg/database/ent/runtime"
 
 	"entgo.io/ent/dialect/sql/schema"
+	"github.com/MisLink/go-web-template/pkg/database/ent/migrate"
 )
 
 type (

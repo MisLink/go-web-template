@@ -3,9 +3,8 @@
 package user
 
 import (
-	"MODULE_NAME/pkg/database/ent/predicate"
-
 	"entgo.io/ent/dialect/sql"
+	"github.com/MisLink/go-web-template/pkg/database/ent/predicate"
 )
 
 // ID filters vertices based on their ID field.

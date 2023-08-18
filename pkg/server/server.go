@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"time"
 
-	"MODULE_NAME/pkg/utils"
-	"MODULE_NAME/types"
+	"github.com/MisLink/go-web-template/pkg/utils"
+	types "github.com/MisLink/go-web-template/types"
 
 	"code.cloudfoundry.org/bytefmt"
 	sentryhttp "github.com/getsentry/sentry-go/http"

@@ -1,4 +1,4 @@
-module MODULE_NAME
+module github.com/MisLink/go-web-template
 
 go 1.19
 

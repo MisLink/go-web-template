@@ -8,13 +8,12 @@ import (
 	"fmt"
 	"log"
 
-	"MODULE_NAME/pkg/database/ent/migrate"
-
-	"MODULE_NAME/pkg/database/ent/user"
+	"github.com/MisLink/go-web-template/pkg/database/ent/migrate"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
+	"github.com/MisLink/go-web-template/pkg/database/ent/user"
 
 	stdsql "database/sql"
 )

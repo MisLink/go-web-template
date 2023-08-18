@@ -1,7 +1,10 @@
 syntax = "proto3";
-
-option go_package = "MODULE_NAME/api";
-
+option go_package = "github.com/MisLink/go-web-template/api";
 
 service MODULE_NAME {
+  rpc Get(GetRequest) returns (GetResponse) {}
 }
+
+message GetRequest {}
+
+message GetResponse {}

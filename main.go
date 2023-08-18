@@ -1,7 +1,7 @@
 package main
 
 import (
-	"MODULE_NAME/cmd"
+	cmd "github.com/MisLink/go-web-template/cmd"
 
 	"github.com/rs/zerolog/log"
 	"go.uber.org/automaxprocs/maxprocs"

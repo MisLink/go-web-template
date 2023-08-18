@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"MODULE_NAME/pkg/database/ent"
+	"github.com/MisLink/go-web-template/pkg/database/ent"
 
-	_ "MODULE_NAME/pkg/database/ent/runtime"
+	_ "github.com/MisLink/go-web-template/pkg/database/ent/runtime"
 
 	"entgo.io/ent/dialect/sql"
 	"github.com/XSAM/otelsql"

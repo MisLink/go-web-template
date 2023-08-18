@@ -32,6 +32,7 @@ const _ = twirp.TwirpPackageMinVersion_8_1_0
 // =====================
 
 type MODULE_NAME interface {
+	Get(context.Context, *GetRequest) (*GetResponse, error)
 }
 
 // ===========================
@@ -40,7 +41,7 @@ type MODULE_NAME interface {
 
 type mODULE_NAMEProtobufClient struct {
 	client      HTTPClient
-	urls        [0]string
+	urls        [1]string
 	interceptor twirp.Interceptor
 	opts        twirp.ClientOptions
 }
@@ -65,7 +66,12 @@ func NewMODULE_NAMEProtobufClient(baseURL string, client HTTPClient, opts ...twi
 		pathPrefix = "/twirp" // default prefix
 	}
 
-	urls := [0]string{}
+	// Build method URLs: <baseURL>[<prefix>]/<package>.<Service>/<Method>
+	serviceURL := sanitizeBaseURL(baseURL)
+	serviceURL += baseServicePath(pathPrefix, "", "MODULE_NAME")
+	urls := [1]string{
+		serviceURL + "Get",
+	}
 
 	return &mODULE_NAMEProtobufClient{
 		client:      client,
@@ -75,13 +81,59 @@ func NewMODULE_NAMEProtobufClient(baseURL string, client HTTPClient, opts ...twi
 	}
 }
 
+func (c *mODULE_NAMEProtobufClient) Get(ctx context.Context, in *GetRequest) (*GetResponse, error) {
+	ctx = ctxsetters.WithPackageName(ctx, "")
+	ctx = ctxsetters.WithServiceName(ctx, "MODULE_NAME")
+	ctx = ctxsetters.WithMethodName(ctx, "Get")
+	caller := c.callGet
+	if c.interceptor != nil {
+		caller = func(ctx context.Context, req *GetRequest) (*GetResponse, error) {
+			resp, err := c.interceptor(
+				func(ctx context.Context, req interface{}) (interface{}, error) {
+					typedReq, ok := req.(*GetRequest)
+					if !ok {
+						return nil, twirp.InternalError("failed type assertion req.(*GetRequest) when calling interceptor")
+					}
+					return c.callGet(ctx, typedReq)
+				},
+			)(ctx, req)
+			if resp != nil {
+				typedResp, ok := resp.(*GetResponse)
+				if !ok {
+					return nil, twirp.InternalError("failed type assertion resp.(*GetResponse) when calling interceptor")
+				}
+				return typedResp, err
+			}
+			return nil, err
+		}
+	}
+	return caller(ctx, in)
+}
+
+func (c *mODULE_NAMEProtobufClient) callGet(ctx context.Context, in *GetRequest) (*GetResponse, error) {
+	out := new(GetResponse)
+	ctx, err := doProtobufRequest(ctx, c.client, c.opts.Hooks, c.urls[0], in, out)
+	if err != nil {
+		twerr, ok := err.(twirp.Error)
+		if !ok {
+			twerr = twirp.InternalErrorWith(err)
+		}
+		callClientError(ctx, c.opts.Hooks, twerr)
+		return nil, err
+	}
+
+	callClientResponseReceived(ctx, c.opts.Hooks)
+
+	return out, nil
+}
+
 // =======================
 // MODULE_NAME JSON Client
 // =======================
 
 type mODULE_NAMEJSONClient struct {
 	client      HTTPClient
-	urls        [0]string
+	urls        [1]string
 	interceptor twirp.Interceptor
 	opts        twirp.ClientOptions
 }
@@ -106,7 +158,12 @@ func NewMODULE_NAMEJSONClient(baseURL string, client HTTPClient, opts ...twirp.C
 		pathPrefix = "/twirp" // default prefix
 	}
 
-	urls := [0]string{}
+	// Build method URLs: <baseURL>[<prefix>]/<package>.<Service>/<Method>
+	serviceURL := sanitizeBaseURL(baseURL)
+	serviceURL += baseServicePath(pathPrefix, "", "MODULE_NAME")
+	urls := [1]string{
+		serviceURL + "Get",
+	}
 
 	return &mODULE_NAMEJSONClient{
 		client:      client,
@@ -114,6 +171,52 @@ func NewMODULE_NAMEJSONClient(baseURL string, client HTTPClient, opts ...twirp.C
 		interceptor: twirp.ChainInterceptors(clientOpts.Interceptors...),
 		opts:        clientOpts,
 	}
+}
+
+func (c *mODULE_NAMEJSONClient) Get(ctx context.Context, in *GetRequest) (*GetResponse, error) {
+	ctx = ctxsetters.WithPackageName(ctx, "")
+	ctx = ctxsetters.WithServiceName(ctx, "MODULE_NAME")
+	ctx = ctxsetters.WithMethodName(ctx, "Get")
+	caller := c.callGet
+	if c.interceptor != nil {
+		caller = func(ctx context.Context, req *GetRequest) (*GetResponse, error) {
+			resp, err := c.interceptor(
+				func(ctx context.Context, req interface{}) (interface{}, error) {
+					typedReq, ok := req.(*GetRequest)
+					if !ok {
+						return nil, twirp.InternalError("failed type assertion req.(*GetRequest) when calling interceptor")
+					}
+					return c.callGet(ctx, typedReq)
+				},
+			)(ctx, req)
+			if resp != nil {
+				typedResp, ok := resp.(*GetResponse)
+				if !ok {
+					return nil, twirp.InternalError("failed type assertion resp.(*GetResponse) when calling interceptor")
+				}
+				return typedResp, err
+			}
+			return nil, err
+		}
+	}
+	return caller(ctx, in)
+}
+
+func (c *mODULE_NAMEJSONClient) callGet(ctx context.Context, in *GetRequest) (*GetResponse, error) {
+	out := new(GetResponse)
+	ctx, err := doJSONRequest(ctx, c.client, c.opts.Hooks, c.urls[0], in, out)
+	if err != nil {
+		twerr, ok := err.(twirp.Error)
+		if !ok {
+			twerr = twirp.InternalErrorWith(err)
+		}
+		callClientError(ctx, c.opts.Hooks, twerr)
+		return nil, err
+	}
+
+	callClientResponseReceived(ctx, c.opts.Hooks)
+
+	return out, nil
 }
 
 // ==========================
@@ -213,11 +316,194 @@ func (s *mODULE_NAMEServer) ServeHTTP(resp http.ResponseWriter, req *http.Reques
 	}
 
 	switch method {
+	case "Get":
+		s.serveGet(ctx, resp, req)
+		return
 	default:
 		msg := fmt.Sprintf("no handler for path %q", req.URL.Path)
 		s.writeError(ctx, resp, badRouteError(msg, req.Method, req.URL.Path))
 		return
 	}
+}
+
+func (s *mODULE_NAMEServer) serveGet(ctx context.Context, resp http.ResponseWriter, req *http.Request) {
+	header := req.Header.Get("Content-Type")
+	i := strings.Index(header, ";")
+	if i == -1 {
+		i = len(header)
+	}
+	switch strings.TrimSpace(strings.ToLower(header[:i])) {
+	case "application/json":
+		s.serveGetJSON(ctx, resp, req)
+	case "application/protobuf":
+		s.serveGetProtobuf(ctx, resp, req)
+	default:
+		msg := fmt.Sprintf("unexpected Content-Type: %q", req.Header.Get("Content-Type"))
+		twerr := badRouteError(msg, req.Method, req.URL.Path)
+		s.writeError(ctx, resp, twerr)
+	}
+}
+
+func (s *mODULE_NAMEServer) serveGetJSON(ctx context.Context, resp http.ResponseWriter, req *http.Request) {
+	var err error
+	ctx = ctxsetters.WithMethodName(ctx, "Get")
+	ctx, err = callRequestRouted(ctx, s.hooks)
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+
+	d := json.NewDecoder(req.Body)
+	rawReqBody := json.RawMessage{}
+	if err := d.Decode(&rawReqBody); err != nil {
+		s.handleRequestBodyError(ctx, resp, "the json request could not be decoded", err)
+		return
+	}
+	reqContent := new(GetRequest)
+	unmarshaler := protojson.UnmarshalOptions{DiscardUnknown: true}
+	if err = unmarshaler.Unmarshal(rawReqBody, reqContent); err != nil {
+		s.handleRequestBodyError(ctx, resp, "the json request could not be decoded", err)
+		return
+	}
+
+	handler := s.MODULE_NAME.Get
+	if s.interceptor != nil {
+		handler = func(ctx context.Context, req *GetRequest) (*GetResponse, error) {
+			resp, err := s.interceptor(
+				func(ctx context.Context, req interface{}) (interface{}, error) {
+					typedReq, ok := req.(*GetRequest)
+					if !ok {
+						return nil, twirp.InternalError("failed type assertion req.(*GetRequest) when calling interceptor")
+					}
+					return s.MODULE_NAME.Get(ctx, typedReq)
+				},
+			)(ctx, req)
+			if resp != nil {
+				typedResp, ok := resp.(*GetResponse)
+				if !ok {
+					return nil, twirp.InternalError("failed type assertion resp.(*GetResponse) when calling interceptor")
+				}
+				return typedResp, err
+			}
+			return nil, err
+		}
+	}
+
+	// Call service method
+	var respContent *GetResponse
+	func() {
+		defer ensurePanicResponses(ctx, resp, s.hooks)
+		respContent, err = handler(ctx, reqContent)
+	}()
+
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+	if respContent == nil {
+		s.writeError(ctx, resp, twirp.InternalError("received a nil *GetResponse and nil error while calling Get. nil responses are not supported"))
+		return
+	}
+
+	ctx = callResponsePrepared(ctx, s.hooks)
+
+	marshaler := &protojson.MarshalOptions{UseProtoNames: !s.jsonCamelCase, EmitUnpopulated: !s.jsonSkipDefaults}
+	respBytes, err := marshaler.Marshal(respContent)
+	if err != nil {
+		s.writeError(ctx, resp, wrapInternal(err, "failed to marshal json response"))
+		return
+	}
+
+	ctx = ctxsetters.WithStatusCode(ctx, http.StatusOK)
+	resp.Header().Set("Content-Type", "application/json")
+	resp.Header().Set("Content-Length", strconv.Itoa(len(respBytes)))
+	resp.WriteHeader(http.StatusOK)
+
+	if n, err := resp.Write(respBytes); err != nil {
+		msg := fmt.Sprintf("failed to write response, %d of %d bytes written: %s", n, len(respBytes), err.Error())
+		twerr := twirp.NewError(twirp.Unknown, msg)
+		ctx = callError(ctx, s.hooks, twerr)
+	}
+	callResponseSent(ctx, s.hooks)
+}
+
+func (s *mODULE_NAMEServer) serveGetProtobuf(ctx context.Context, resp http.ResponseWriter, req *http.Request) {
+	var err error
+	ctx = ctxsetters.WithMethodName(ctx, "Get")
+	ctx, err = callRequestRouted(ctx, s.hooks)
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+
+	buf, err := io.ReadAll(req.Body)
+	if err != nil {
+		s.handleRequestBodyError(ctx, resp, "failed to read request body", err)
+		return
+	}
+	reqContent := new(GetRequest)
+	if err = proto.Unmarshal(buf, reqContent); err != nil {
+		s.writeError(ctx, resp, malformedRequestError("the protobuf request could not be decoded"))
+		return
+	}
+
+	handler := s.MODULE_NAME.Get
+	if s.interceptor != nil {
+		handler = func(ctx context.Context, req *GetRequest) (*GetResponse, error) {
+			resp, err := s.interceptor(
+				func(ctx context.Context, req interface{}) (interface{}, error) {
+					typedReq, ok := req.(*GetRequest)
+					if !ok {
+						return nil, twirp.InternalError("failed type assertion req.(*GetRequest) when calling interceptor")
+					}
+					return s.MODULE_NAME.Get(ctx, typedReq)
+				},
+			)(ctx, req)
+			if resp != nil {
+				typedResp, ok := resp.(*GetResponse)
+				if !ok {
+					return nil, twirp.InternalError("failed type assertion resp.(*GetResponse) when calling interceptor")
+				}
+				return typedResp, err
+			}
+			return nil, err
+		}
+	}
+
+	// Call service method
+	var respContent *GetResponse
+	func() {
+		defer ensurePanicResponses(ctx, resp, s.hooks)
+		respContent, err = handler(ctx, reqContent)
+	}()
+
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+	if respContent == nil {
+		s.writeError(ctx, resp, twirp.InternalError("received a nil *GetResponse and nil error while calling Get. nil responses are not supported"))
+		return
+	}
+
+	ctx = callResponsePrepared(ctx, s.hooks)
+
+	respBytes, err := proto.Marshal(respContent)
+	if err != nil {
+		s.writeError(ctx, resp, wrapInternal(err, "failed to marshal proto response"))
+		return
+	}
+
+	ctx = ctxsetters.WithStatusCode(ctx, http.StatusOK)
+	resp.Header().Set("Content-Type", "application/protobuf")
+	resp.Header().Set("Content-Length", strconv.Itoa(len(respBytes)))
+	resp.WriteHeader(http.StatusOK)
+	if n, err := resp.Write(respBytes); err != nil {
+		msg := fmt.Sprintf("failed to write response, %d of %d bytes written: %s", n, len(respBytes), err.Error())
+		twerr := twirp.NewError(twirp.Unknown, msg)
+		ctx = callError(ctx, s.hooks, twerr)
+	}
+	callResponseSent(ctx, s.hooks)
 }
 
 func (s *mODULE_NAMEServer) ServiceDescriptor() ([]byte, int) {
@@ -801,10 +1087,14 @@ func callClientError(ctx context.Context, h *twirp.ClientHooks, err twirp.Error)
 }
 
 var twirpFileDescriptor0 = []byte{
-	// 65 bytes of a gzipped FileDescriptorProto
+	// 142 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x4c, 0x2c, 0xc8, 0xd4,
-	0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x37, 0xe2, 0xe5, 0xe2, 0xf6, 0xf5, 0x77, 0x09, 0xf5, 0x71, 0x8d,
-	0xf7, 0x73, 0xf4, 0x75, 0x75, 0x12, 0x8c, 0xe2, 0x47, 0xe2, 0xea, 0x27, 0x16, 0x64, 0x26, 0xb1,
-	0x81, 0x15, 0x1a, 0x03, 0x02, 0x00, 0x00, 0xff, 0xff, 0x6a, 0x9d, 0x26, 0x30, 0x35, 0x00, 0x00,
-	0x00,
+	0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x57, 0xe2, 0xe1, 0xe2, 0x72, 0x4f, 0x2d, 0x09, 0x4a, 0x2d, 0x2c,
+	0x4d, 0x2d, 0x2e, 0x51, 0xe2, 0xe5, 0xe2, 0x06, 0xf3, 0x8a, 0x0b, 0xf2, 0xf3, 0x8a, 0x53, 0x8d,
+	0x0c, 0xb9, 0xb8, 0x7d, 0xfd, 0x5d, 0x42, 0x7d, 0x5c, 0xe3, 0xfd, 0x1c, 0x7d, 0x5d, 0x85, 0x94,
+	0xb8, 0x98, 0xdd, 0x53, 0x4b, 0x84, 0xb8, 0xf5, 0x10, 0x3a, 0xa4, 0x78, 0xf4, 0x90, 0x34, 0x28,
+	0x31, 0x38, 0x69, 0x44, 0xa9, 0xa5, 0x67, 0x96, 0x64, 0x94, 0x26, 0xe9, 0x25, 0xe7, 0xe7, 0xea,
+	0xfb, 0x66, 0x16, 0xfb, 0x64, 0xe6, 0x65, 0xeb, 0xa7, 0xe7, 0xeb, 0x96, 0xa7, 0x26, 0xe9, 0x96,
+	0xa4, 0xe6, 0x16, 0xe4, 0x24, 0x96, 0xa4, 0xea, 0x27, 0x16, 0x64, 0x26, 0xb1, 0x81, 0x1d, 0x60,
+	0x0c, 0x08, 0x00, 0x00, 0xff, 0xff, 0x21, 0x9d, 0xfa, 0x29, 0x8d, 0x00, 0x00, 0x00,
 }

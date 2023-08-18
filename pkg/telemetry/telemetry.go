@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	"MODULE_NAME/pkg/config"
-	"MODULE_NAME/types"
+	"github.com/MisLink/go-web-template/pkg/config"
+	types "github.com/MisLink/go-web-template/types"
 
 	"github.com/getsentry/sentry-go"
 	"github.com/google/wire"

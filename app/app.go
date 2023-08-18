@@ -3,9 +3,9 @@ package app
 import (
 	"context"
 
-	"MODULE_NAME/api"
-	"MODULE_NAME/pkg/crontab"
-	"MODULE_NAME/pkg/server"
+	api "github.com/MisLink/go-web-template/api"
+	"github.com/MisLink/go-web-template/pkg/crontab"
+	"github.com/MisLink/go-web-template/pkg/server"
 
 	"github.com/getsentry/sentry-go"
 	"github.com/google/wire"

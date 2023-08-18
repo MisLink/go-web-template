@@ -3,9 +3,10 @@
 package privacy
 
 import (
-	"MODULE_NAME/pkg/database/ent"
 	"context"
 	"fmt"
+
+	"github.com/MisLink/go-web-template/pkg/database/ent"
 
 	"entgo.io/ent/entql"
 	"entgo.io/ent/privacy"

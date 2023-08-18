@@ -3,8 +3,6 @@
 package ent
 
 import (
-	"MODULE_NAME/pkg/database/ent/predicate"
-	"MODULE_NAME/pkg/database/ent/user"
 	"context"
 	"errors"
 	"fmt"
@@ -12,6 +10,8 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/MisLink/go-web-template/pkg/database/ent/predicate"
+	"github.com/MisLink/go-web-template/pkg/database/ent/user"
 )
 
 // UserUpdate is the builder for updating User entities.

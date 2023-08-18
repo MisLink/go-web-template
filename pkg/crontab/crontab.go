@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"MODULE_NAME/pkg/utils"
+	"github.com/MisLink/go-web-template/pkg/utils"
 
 	"github.com/google/wire"
 	"github.com/redis/rueidis/rueidislock"

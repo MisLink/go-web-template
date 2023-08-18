@@ -3,7 +3,6 @@
 package ent
 
 import (
-	"MODULE_NAME/pkg/database/ent/predicate"
 	"context"
 	"errors"
 	"fmt"
@@ -11,6 +10,7 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
+	"github.com/MisLink/go-web-template/pkg/database/ent/predicate"
 )
 
 const (

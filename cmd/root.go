@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"MODULE_NAME/types"
+	types "github.com/MisLink/go-web-template/types"
 
 	"github.com/spf13/cobra"
 )

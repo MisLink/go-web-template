@@ -7,15 +7,15 @@
 package cmd
 
 import (
-	"MODULE_NAME/app"
-	"MODULE_NAME/pkg/config"
-	"MODULE_NAME/pkg/crontab"
-	"MODULE_NAME/pkg/database"
-	"MODULE_NAME/pkg/database/ent"
-	"MODULE_NAME/pkg/logger"
-	"MODULE_NAME/pkg/redis"
-	"MODULE_NAME/pkg/server"
-	"MODULE_NAME/pkg/telemetry"
+	"github.com/MisLink/go-web-template/app"
+	"github.com/MisLink/go-web-template/pkg/config"
+	"github.com/MisLink/go-web-template/pkg/crontab"
+	"github.com/MisLink/go-web-template/pkg/database"
+	"github.com/MisLink/go-web-template/pkg/database/ent"
+	"github.com/MisLink/go-web-template/pkg/logger"
+	"github.com/MisLink/go-web-template/pkg/redis"
+	"github.com/MisLink/go-web-template/pkg/server"
+	"github.com/MisLink/go-web-template/pkg/telemetry"
 	"github.com/google/wire"
 )
 

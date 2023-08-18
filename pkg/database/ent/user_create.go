@@ -3,7 +3,6 @@
 package ent
 
 import (
-	"MODULE_NAME/pkg/database/ent/user"
 	"context"
 	"errors"
 	"fmt"
@@ -11,6 +10,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/MisLink/go-web-template/pkg/database/ent/user"
 )
 
 // UserCreate is the builder for creating a User entity.

@@ -3,7 +3,7 @@
 package ent
 
 import (
-	"MODULE_NAME/pkg/database/ent/user"
+	"github.com/MisLink/go-web-template/pkg/database/ent/user"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"

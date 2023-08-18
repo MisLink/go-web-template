@@ -4,7 +4,7 @@ import (
 	"context"
 	"os"
 
-	"MODULE_NAME/pkg/database/ent/migrate"
+	"github.com/MisLink/go-web-template/pkg/database/ent/migrate"
 
 	"entgo.io/ent/dialect/sql/schema"
 	"github.com/spf13/cobra"

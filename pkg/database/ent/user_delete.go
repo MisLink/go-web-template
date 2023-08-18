@@ -3,13 +3,13 @@
 package ent
 
 import (
-	"MODULE_NAME/pkg/database/ent/predicate"
-	"MODULE_NAME/pkg/database/ent/user"
 	"context"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/MisLink/go-web-template/pkg/database/ent/predicate"
+	"github.com/MisLink/go-web-template/pkg/database/ent/user"
 )
 
 // UserDelete is the builder for deleting a User entity.

@@ -3,9 +3,10 @@
 package hook
 
 import (
-	"MODULE_NAME/pkg/database/ent"
 	"context"
 	"fmt"
+
+	"github.com/MisLink/go-web-template/pkg/database/ent"
 )
 
 // The UserFunc type is an adapter to allow the use of ordinary

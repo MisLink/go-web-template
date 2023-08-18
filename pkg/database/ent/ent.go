@@ -3,7 +3,6 @@
 package ent
 
 import (
-	"MODULE_NAME/pkg/database/ent/user"
 	"context"
 	"errors"
 	"fmt"
@@ -13,6 +12,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
+	"github.com/MisLink/go-web-template/pkg/database/ent/user"
 )
 
 // ent aliases to avoid import conflicts in user's code.

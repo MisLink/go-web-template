@@ -2,7 +2,7 @@
 
 package runtime
 
-// The schema-stitching logic is generated in MODULE_NAME/pkg/database/ent/runtime.go
+// The schema-stitching logic is generated in github.com/MisLink/go-web-template/pkg/database/ent/runtime.go
 
 const (
 	Version = "v0.12.3"                                         // Version of ent codegen.

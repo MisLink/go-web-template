@@ -3,12 +3,12 @@
 package ent
 
 import (
-	"MODULE_NAME/pkg/database/ent/user"
 	"fmt"
 	"strings"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
+	"github.com/MisLink/go-web-template/pkg/database/ent/user"
 )
 
 // User is the model entity for the User schema.

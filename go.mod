@@ -21,14 +21,14 @@ require (
 	github.com/twmb/franz-go v1.14.1
 	github.com/twmb/franz-go/plugin/kzerolog v1.0.0
 	github.com/valyala/bytebufferpool v1.0.0
-	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.42.0
-	go.opentelemetry.io/otel v1.16.0
+	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.44.0
+	go.opentelemetry.io/otel v1.18.0
 	go.opentelemetry.io/otel/exporters/prometheus v0.39.0
 	go.opentelemetry.io/otel/exporters/stdout/stdouttrace v1.16.0
-	go.opentelemetry.io/otel/metric v1.16.0
+	go.opentelemetry.io/otel/metric v1.18.0
 	go.opentelemetry.io/otel/sdk v1.16.0
 	go.opentelemetry.io/otel/sdk/metric v0.39.0
-	go.opentelemetry.io/otel/trace v1.16.0
+	go.opentelemetry.io/otel/trace v1.18.0
 	go.uber.org/automaxprocs v1.5.2
 	golang.org/x/sync v0.3.0
 	google.golang.org/protobuf v1.31.0

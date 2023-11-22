@@ -34,7 +34,7 @@ linters:
 
 linters-settings:
   gofumpt:
-    module-path: sec-blame
+    module-path: MODULE_NAME
   stylecheck:
     checks: ["all", "-ST1000", "-ST1003"]
   revive:

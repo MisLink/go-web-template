@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/MisLink/go-web-template/pkg/utils"
 	types "github.com/MisLink/go-web-template/types"
 
 	"code.cloudfoundry.org/bytefmt"
@@ -105,22 +104,22 @@ func New(
 	return server, nil
 }
 
-func (s *Server) Start() error {
-	return utils.Lifecycle(
-		context.Background(),
-		func() error {
-			ln, err := net.Listen("tcp", s.server.Addr)
-			if err != nil {
-				return err
-			}
-			s.logger.Info().Str("addr", s.server.Addr).Msg("start listening")
-			return s.server.Serve(ln)
-		},
-		func() error {
-			ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
-			defer cancel()
-			return s.server.Shutdown(ctx)
-		})
+func (s *Server) Start(ctx context.Context) error {
+	ln, err := net.Listen("tcp", s.server.Addr)
+	if err != nil {
+		return err
+	}
+	s.server.BaseContext = func(_ net.Listener) context.Context {
+		return ctx
+	}
+	s.logger.Info().Str("addr", s.server.Addr).Msg("start listening")
+	return s.server.Serve(ln)
+}
+
+func (s *Server) Close() error {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
+	defer cancel()
+	return s.server.Shutdown(ctx)
 }
 
 var ProviderSet = wire.NewSet(NewOptions, New)

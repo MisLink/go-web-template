@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"context"
+
+	"github.com/MisLink/go-web-template/pkg/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -13,7 +16,16 @@ var crontabCmd = &cobra.Command{
 			return err
 		}
 		defer cleanup()
-		return crontab.Start()
+		ctx, cancel, err := crontab.Lock(cmd.Context())
+		if err != nil {
+			return err
+		}
+		defer cancel()
+		return utils.Lifecycle(ctx, func(ctx context.Context) error {
+			return crontab.Start()
+		}, func() error {
+			return crontab.Close()
+		})
 	},
 }
 

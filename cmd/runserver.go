@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"context"
+
+	"github.com/MisLink/go-web-template/pkg/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -13,7 +16,11 @@ var runserverCmd = &cobra.Command{
 			return err
 		}
 		defer cleanup()
-		return server.Start()
+		return utils.Lifecycle(cmd.Context(), func(ctx context.Context) error {
+			return server.Start(ctx)
+		}, func() error {
+			return server.Close()
+		})
 	},
 }
 

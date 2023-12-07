@@ -1,7 +1,10 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
+	"os/signal"
+	"syscall"
 
 	types "github.com/MisLink/go-web-template/types"
 
@@ -18,8 +21,10 @@ var rootCmd = &cobra.Command{
 	SilenceErrors: true,
 }
 
-func init() {}
-
 func Execute() error {
-	return rootCmd.Execute()
+	ctx, reset := signal.NotifyContext(
+		context.Background(),
+		syscall.SIGTERM, syscall.SIGINT, syscall.SIGHUP, syscall.SIGQUIT)
+	defer reset()
+	return rootCmd.ExecuteContext(ctx)
 }

@@ -4,8 +4,6 @@ import (
 	"context"
 	"time"
 
-	"github.com/MisLink/go-web-template/pkg/utils"
-
 	"github.com/google/wire"
 	"github.com/redis/rueidis/rueidislock"
 	"github.com/robfig/cron/v3"
@@ -68,27 +66,29 @@ func (c *Crontab) Register(name string, task PeriodicTask) error {
 	return err
 }
 
-func (c *Crontab) Start() error {
-	var ctx context.Context
+func (c *Crontab) Lock(ctx context.Context) (context.Context, context.CancelFunc, error) {
+	var nCtx context.Context
 	var cancel context.CancelFunc
 	for {
 		var err error
-		ctx, cancel, err = c.locker.WithContext(context.Background(), "crontab")
+		nCtx, cancel, err = c.locker.WithContext(ctx, "crontab")
 		if err != nil {
 			c.logger.Err(err).Msg("obtain lock error")
 			continue
 		}
 		break
 	}
-	defer cancel()
-	return utils.Lifecycle(ctx, func() error {
-		c.cron.Run()
-		return nil
-	}, func() error {
-		ctx := c.cron.Stop()
-		<-ctx.Done()
-		return nil
-	})
+	return nCtx, cancel, nil
+}
+
+func (c *Crontab) Start() error {
+	c.cron.Run()
+	return nil
+}
+
+func (c *Crontab) Close() error {
+	<-c.cron.Stop().Done()
+	return nil
 }
 
 var ProviderSet = wire.NewSet(New)

@@ -9,7 +9,7 @@ require (
 	github.com/getsentry/sentry-go v0.28.1
 	github.com/go-chi/chi/v5 v5.0.10
 	github.com/go-sql-driver/mysql v1.7.1
-	github.com/google/wire v0.5.0
+	github.com/google/wire v0.6.0
 	github.com/knadh/koanf/providers/env v0.1.0
 	github.com/mattn/go-isatty v0.0.20
 	github.com/prometheus/client_golang v1.17.0
@@ -78,5 +78,5 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	golang.org/x/mod v0.14.0 // indirect
 	golang.org/x/sys v0.18.0 // indirect
-	golang.org/x/tools v0.15.0 // indirect
+	golang.org/x/tools v0.17.0 // indirect
 )

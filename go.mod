@@ -18,7 +18,7 @@ require (
 	github.com/rs/zerolog v1.31.0
 	github.com/spf13/cobra v1.8.0
 	github.com/twitchtv/twirp v8.1.3+incompatible
-	github.com/twmb/franz-go v1.15.2
+	github.com/twmb/franz-go v1.17.1
 	github.com/twmb/franz-go/plugin/kzerolog v1.0.0
 	github.com/valyala/bytebufferpool v1.0.0
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.46.1
@@ -46,7 +46,7 @@ require (
 	github.com/go-openapi/inflect v0.19.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/hashicorp/hcl/v2 v2.19.1 // indirect
-	github.com/klauspost/compress v1.17.7 // indirect
+	github.com/klauspost/compress v1.17.8 // indirect
 	github.com/knadh/koanf/maps v0.1.1 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
@@ -56,14 +56,14 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
-	github.com/pierrec/lz4/v4 v4.1.18 // indirect
+	github.com/pierrec/lz4/v4 v4.1.21 // indirect
 	github.com/prometheus/client_model v0.5.0 // indirect
 	github.com/prometheus/common v0.45.0 // indirect
 	github.com/prometheus/procfs v0.12.0 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/rs/xid v1.5.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/twmb/franz-go/pkg/kmsg v1.7.0 // indirect
+	github.com/twmb/franz-go/pkg/kmsg v1.8.0 // indirect
 	github.com/zclconf/go-cty v1.14.1 // indirect
 	golang.org/x/text v0.14.0 // indirect
 )

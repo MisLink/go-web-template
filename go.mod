@@ -8,7 +8,7 @@ require (
 	github.com/XSAM/otelsql v0.26.0
 	github.com/getsentry/sentry-go v0.28.1
 	github.com/go-chi/chi/v5 v5.1.0
-	github.com/go-sql-driver/mysql v1.7.1
+	github.com/go-sql-driver/mysql v1.8.1
 	github.com/google/wire v0.6.0
 	github.com/knadh/koanf/providers/env v0.1.0
 	github.com/mattn/go-isatty v0.0.20
@@ -36,6 +36,7 @@ require (
 
 require (
 	ariga.io/atlas v0.15.0 // indirect
+	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/apparentlymart/go-textseg/v15 v15.0.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect

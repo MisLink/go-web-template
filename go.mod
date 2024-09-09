@@ -3,7 +3,7 @@ module github.com/MisLink/go-web-template
 go 1.19
 
 require (
-	code.cloudfoundry.org/bytefmt v0.0.0-20231017140541-3b893ed0421b
+	code.cloudfoundry.org/bytefmt v0.8.0
 	entgo.io/ent v0.12.5
 	github.com/XSAM/otelsql v0.26.0
 	github.com/getsentry/sentry-go v0.28.1
@@ -41,7 +41,7 @@ require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
-	github.com/go-logr/logr v1.3.0 // indirect
+	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-openapi/inflect v0.19.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
@@ -65,7 +65,7 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/twmb/franz-go/pkg/kmsg v1.8.0 // indirect
 	github.com/zclconf/go-cty v1.14.1 // indirect
-	golang.org/x/text v0.14.0 // indirect
+	golang.org/x/text v0.18.0 // indirect
 )
 
 require (
@@ -76,7 +76,7 @@ require (
 	github.com/knadh/koanf/v2 v2.0.1
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	golang.org/x/mod v0.14.0 // indirect
-	golang.org/x/sys v0.18.0 // indirect
-	golang.org/x/tools v0.17.0 // indirect
+	golang.org/x/mod v0.20.0 // indirect
+	golang.org/x/sys v0.25.0 // indirect
+	golang.org/x/tools v0.24.0 // indirect
 )

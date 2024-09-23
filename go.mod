@@ -12,7 +12,7 @@ require (
 	github.com/google/wire v0.6.0
 	github.com/knadh/koanf/providers/env v0.1.0
 	github.com/mattn/go-isatty v0.0.20
-	github.com/prometheus/client_golang v1.20.3
+	github.com/prometheus/client_golang v1.20.4
 	github.com/redis/rueidis v1.0.22
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/rs/zerolog v1.33.0

@@ -10,7 +10,7 @@ require (
 	github.com/go-chi/chi/v5 v5.1.0
 	github.com/go-sql-driver/mysql v1.8.1
 	github.com/google/wire v0.6.0
-	github.com/knadh/koanf/providers/env v0.1.0
+	github.com/knadh/koanf/providers/env v1.0.0
 	github.com/mattn/go-isatty v0.0.20
 	github.com/prometheus/client_golang v1.20.4
 	github.com/redis/rueidis v1.0.22

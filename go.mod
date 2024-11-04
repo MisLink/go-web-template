@@ -3,7 +3,7 @@ module github.com/MisLink/go-web-template
 go 1.19
 
 require (
-	code.cloudfoundry.org/bytefmt v0.14.0
+	code.cloudfoundry.org/bytefmt v0.16.0
 	entgo.io/ent v0.12.5
 	github.com/XSAM/otelsql v0.26.0
 	github.com/getsentry/sentry-go v0.29.1

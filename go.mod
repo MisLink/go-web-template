@@ -16,7 +16,7 @@ require (
 	github.com/redis/rueidis v1.0.22
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/rs/zerolog v1.33.0
-	github.com/spf13/cobra v1.8.1
+	github.com/spf13/cobra v1.9.1
 	github.com/twitchtv/twirp v8.1.3+incompatible
 	github.com/twmb/franz-go v1.18.1
 	github.com/twmb/franz-go/plugin/kzerolog v1.0.0
@@ -63,7 +63,7 @@ require (
 	github.com/prometheus/procfs v0.15.1 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/rs/xid v1.5.0 // indirect
-	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/spf13/pflag v1.0.6 // indirect
 	github.com/twmb/franz-go/pkg/kmsg v1.9.0 // indirect
 	github.com/zclconf/go-cty v1.14.1 // indirect
 	golang.org/x/text v0.21.0 // indirect

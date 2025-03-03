@@ -3,7 +3,7 @@ module github.com/MisLink/go-web-template
 go 1.19
 
 require (
-	code.cloudfoundry.org/bytefmt v0.29.0
+	code.cloudfoundry.org/bytefmt v0.30.0
 	entgo.io/ent v0.12.5
 	github.com/XSAM/otelsql v0.26.0
 	github.com/getsentry/sentry-go v0.29.1
@@ -70,7 +70,7 @@ require (
 )
 
 require (
-	github.com/google/go-cmp v0.6.0 // indirect
+	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/google/subcommands v1.2.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/joho/godotenv v1.5.1

@@ -1,6 +1,7 @@
 module github.com/MisLink/go-web-template
 
-go 1.19
+go 1.23.0
+
 toolchain go1.24.1
 
 require (
@@ -16,7 +17,7 @@ require (
 	github.com/prometheus/client_golang v1.20.5
 	github.com/redis/rueidis v1.0.22
 	github.com/robfig/cron/v3 v3.0.1
-	github.com/rs/zerolog v1.33.0
+	github.com/rs/zerolog v1.34.0
 	github.com/spf13/cobra v1.9.1
 	github.com/twitchtv/twirp v8.1.3+incompatible
 	github.com/twmb/franz-go v1.18.1
@@ -64,7 +65,7 @@ require (
 	github.com/prometheus/common v0.62.0 // indirect
 	github.com/prometheus/procfs v0.15.1 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
-	github.com/rs/xid v1.5.0 // indirect
+	github.com/rs/xid v1.6.0 // indirect
 	github.com/spf13/pflag v1.0.6 // indirect
 	github.com/twmb/franz-go/pkg/kmsg v1.9.0 // indirect
 	github.com/zclconf/go-cty v1.14.4 // indirect

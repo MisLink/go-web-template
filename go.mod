@@ -7,7 +7,7 @@ toolchain go1.24.1
 require (
 	code.cloudfoundry.org/bytefmt v0.32.0
 	entgo.io/ent v0.14.4
-	github.com/XSAM/otelsql v0.26.0
+	github.com/XSAM/otelsql v0.38.0
 	github.com/getsentry/sentry-go v0.29.1
 	github.com/go-chi/chi/v5 v5.2.1
 	github.com/go-sql-driver/mysql v1.9.2

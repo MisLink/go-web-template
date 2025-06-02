@@ -1,6 +1,6 @@
 module github.com/MisLink/go-web-template
 
-go 1.23.0
+go 1.23.8
 
 toolchain go1.24.1
 
@@ -21,7 +21,7 @@ require (
 	github.com/rs/zerolog v1.34.0
 	github.com/spf13/cobra v1.9.1
 	github.com/twitchtv/twirp v8.1.3+incompatible
-	github.com/twmb/franz-go v1.18.1
+	github.com/twmb/franz-go v1.19.4
 	github.com/twmb/franz-go/plugin/kzerolog v1.0.0
 	github.com/valyala/bytebufferpool v1.0.0
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.60.0
@@ -68,7 +68,7 @@ require (
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/rs/xid v1.6.0 // indirect
 	github.com/spf13/pflag v1.0.6 // indirect
-	github.com/twmb/franz-go/pkg/kmsg v1.9.0 // indirect
+	github.com/twmb/franz-go/pkg/kmsg v1.11.2 // indirect
 	github.com/zclconf/go-cty v1.14.4 // indirect
 	github.com/zclconf/go-cty-yaml v1.1.0 // indirect
 	go.opentelemetry.io/auto/sdk v1.1.0 // indirect

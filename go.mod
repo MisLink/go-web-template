@@ -9,7 +9,7 @@ require (
 	entgo.io/ent v0.14.4
 	github.com/XSAM/otelsql v0.38.0
 	github.com/getsentry/sentry-go v0.29.1
-	github.com/go-chi/chi/v5 v5.2.1
+	github.com/go-chi/chi/v5 v5.2.2
 	github.com/go-sql-driver/mysql v1.9.2
 	github.com/google/wire v0.6.0
 	github.com/knadh/koanf/providers/env v1.1.0

@@ -8,7 +8,7 @@ require (
 	code.cloudfoundry.org/bytefmt v0.42.0
 	entgo.io/ent v0.14.4
 	github.com/XSAM/otelsql v0.38.0
-	github.com/getsentry/sentry-go v0.29.1
+	github.com/getsentry/sentry-go v0.34.0
 	github.com/go-chi/chi/v5 v5.2.2
 	github.com/go-sql-driver/mysql v1.9.2
 	github.com/google/wire v0.6.0

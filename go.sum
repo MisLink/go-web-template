@@ -136,10 +136,10 @@ github.com/prometheus/common v0.64.0 h1:pdZeA+g617P7oGv1CzdTzyeShxAGrTBsolKNOLQP
 github.com/prometheus/common v0.64.0/go.mod h1:0gZns+BLRQ3V6NdaerOhMbwwRbNh9hkGINtQAsP5GS8=
 github.com/prometheus/procfs v0.16.1 h1:hZ15bTNuirocR6u0JZ6BAHHmwS1p8B4P6MRqxtzMyRg=
 github.com/prometheus/procfs v0.16.1/go.mod h1:teAbpZRB1iIAJYREa1LsoWUXykVXA1KlTmWl8x/U+Is=
-github.com/redis/rueidis v1.0.60 h1:MGZX8uNdw7iyWz22JhjA/9iXzddfCUE/EMK4VxKoKpA=
-github.com/redis/rueidis v1.0.60/go.mod h1:Lkhr2QTgcoYBhxARU7kJRO8SyVlgUuEkcJO1Y8MCluA=
-github.com/redis/rueidis/rueidisotel v1.0.60 h1:xj/sA2LhDRNy6h+wI4PvwcdYQUJryMu0pi58e3+Ccfg=
-github.com/redis/rueidis/rueidisotel v1.0.60/go.mod h1:P15UyeTHlVGnwfrjEmb9nsPc4p/X2pTfAYwQn6ozClo=
+github.com/redis/rueidis v1.0.63 h1:zSt5focn0YgrgBAE5NcnAibyKf3ZKyv+eCQHk62jEFk=
+github.com/redis/rueidis v1.0.63/go.mod h1:Lkhr2QTgcoYBhxARU7kJRO8SyVlgUuEkcJO1Y8MCluA=
+github.com/redis/rueidis/rueidisotel v1.0.63 h1:sG4k64s41ChOaJhzyMLGn0/1J/9yQQdYl39sUJDWpUQ=
+github.com/redis/rueidis/rueidisotel v1.0.63/go.mod h1:dqebrJiG8AjYDLOWtjd2PiCfr9Ajhg2GG09lKRw4C+U=
 github.com/rivo/uniseg v0.2.0/go.mod h1:J6wj4VEh+S6ZtnVlnTBMWIodfgj8LQOQFoIToxlJtxc=
 github.com/rivo/uniseg v0.4.4 h1:8TfxU8dW6PdqD27gjM8MVNuicgxIjxpm4K7x4jp8sis=
 github.com/rivo/uniseg v0.4.4/go.mod h1:FN3SvrM+Zdj16jyLfmOkMNblXMcoc8DfTHruCPUcx88=

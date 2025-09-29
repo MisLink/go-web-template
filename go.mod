@@ -15,8 +15,8 @@ require (
 	github.com/knadh/koanf/providers/env v1.1.0
 	github.com/mattn/go-isatty v0.0.20
 	github.com/prometheus/client_golang v1.22.0
-	github.com/redis/rueidis v1.0.60
-	github.com/redis/rueidis/rueidisotel v1.0.60
+	github.com/redis/rueidis v1.0.66
+	github.com/redis/rueidis/rueidisotel v1.0.66
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/rs/zerolog v1.34.0
 	github.com/spf13/cobra v1.9.1

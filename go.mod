@@ -14,7 +14,7 @@ require (
 	github.com/google/wire v0.6.0
 	github.com/knadh/koanf/providers/env v1.1.0
 	github.com/mattn/go-isatty v0.0.20
-	github.com/prometheus/client_golang v1.22.0
+	github.com/prometheus/client_golang v1.23.2
 	github.com/redis/rueidis v1.0.66
 	github.com/redis/rueidis/rueidisotel v1.0.66
 	github.com/robfig/cron/v3 v3.0.1
@@ -34,7 +34,7 @@ require (
 	go.opentelemetry.io/otel/trace v1.36.0
 	go.uber.org/automaxprocs v1.6.0
 	golang.org/x/sync v0.17.0
-	google.golang.org/protobuf v1.36.6
+	google.golang.org/protobuf v1.36.8
 )
 
 require (
@@ -63,7 +63,7 @@ require (
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
 	github.com/pierrec/lz4/v4 v4.1.22 // indirect
 	github.com/prometheus/client_model v0.6.2 // indirect
-	github.com/prometheus/common v0.64.0 // indirect
+	github.com/prometheus/common v0.66.1 // indirect
 	github.com/prometheus/procfs v0.16.1 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/rs/xid v1.6.0 // indirect
@@ -72,6 +72,7 @@ require (
 	github.com/zclconf/go-cty v1.14.4 // indirect
 	github.com/zclconf/go-cty-yaml v1.1.0 // indirect
 	go.opentelemetry.io/auto/sdk v1.1.0 // indirect
+	go.yaml.in/yaml/v2 v2.4.2 // indirect
 	golang.org/x/text v0.30.0 // indirect
 	golang.org/x/tools/go/packages/packagestest v0.1.1-deprecated // indirect
 )
